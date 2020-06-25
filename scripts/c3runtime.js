@@ -770,6 +770,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Cnds.EveryTick,
 		C3.Behaviors.MoveTo.Acts.MoveToObject,
 		C3.Plugins.System.Acts.RestartLayout,
+		C3.Plugins.System.Acts.ResetGlobals,
 		C3.Plugins.Spritefont2.Acts.SetPos,
 		C3.Plugins.Sprite.Acts.SetPos,
 		C3.Plugins.Sprite.Cnds.OnAnimFinished,
@@ -817,7 +818,8 @@ self.C3_JsPropNameTable = [
 	{Wave: 0},
 	{AmmoSpawn: 0},
 	{Sprite7: 0},
-	{SpawnTime: 0}
+	{SpawnTime: 0},
+	{Mine: 0}
 ];
 
 "use strict";
