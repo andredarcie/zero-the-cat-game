@@ -730,7 +730,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Behaviors.Pin,
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.Sprite.Acts.SetVisible,
-		C3.Plugins.Audio.Acts.Play,
+		C3.Plugins.Spritefont2.Acts.TypewriterText,
 		C3.Behaviors.EightDir.Cnds.IsMoving,
 		C3.Plugins.Sprite.Acts.SetAnim,
 		C3.Plugins.Mouse.Cnds.OnClick,
@@ -738,6 +738,9 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite.Acts.SetTowardPosition,
 		C3.Plugins.Mouse.Exps.X,
 		C3.Plugins.Mouse.Exps.Y,
+		C3.Plugins.Audio.Acts.Play,
+		C3.Plugins.Sprite.Acts.SubInstanceVar,
+		C3.Plugins.Spritefont2.Acts.SetText,
 		C3.Plugins.Keyboard.Cnds.IsKeyDown,
 		C3.Behaviors.EightDir.Acts.SimulateControl,
 		C3.Behaviors.LOS.Cnds.HasLOSToObject,
@@ -751,13 +754,17 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Cnds.Every,
 		C3.Plugins.System.Cnds.EveryTick,
 		C3.Behaviors.MoveTo.Acts.MoveToObject,
-		C3.Plugins.System.Acts.RestartLayout
+		C3.Plugins.System.Acts.RestartLayout,
+		C3.Plugins.Spritefont2.Acts.SetPos,
+		C3.Plugins.Sprite.Acts.SetPos,
+		C3.Plugins.Sprite.Cnds.OnAnimFinished
 	];
 };
 self.C3_JsPropNameTable = [
 	{Sprite: 0},
 	{Sprite2: 0},
 	{Sprite4: 0},
+	{Ammo: 0},
 	{"8Direções": 0},
 	{CentrarEm: 0},
 	{Jogador: 0},
@@ -782,7 +789,10 @@ self.C3_JsPropNameTable = [
 	{Sprite9: 0},
 	{Áudio: 0},
 	{Fixar: 0},
-	{FonteDeSprites2: 0}
+	{FonteDeSprites2: 0},
+	{HUD: 0},
+	{Sangue2: 0},
+	{Sprite7: 0}
 ];
 
 "use strict";
@@ -881,13 +891,24 @@ self.C3_JsPropNameTable = [
 	}
 
 	self.C3_ExpressionFuncs = [
-		() => 0,
-		() => "",
+		p => {
+			const n0 = p._GetNode(0);
+			return () => ("Ammo: " + (n0.ExpInstVar()).toString());
+		},
+		() => 2,
 		() => "andando",
 		() => "parado",
+		() => 0,
+		() => 1,
+		() => "fogo",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0();
+		},
+		() => "",
+		p => {
+			const n0 = p._GetNode(0);
+			return () => and("Ammo:", n0.ExpInstVar());
 		},
 		() => "viu",
 		p => {
@@ -895,7 +916,19 @@ self.C3_JsPropNameTable = [
 			return () => n0.ExpObject();
 		},
 		() => "nao",
-		() => 1
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() + 10);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() - 50);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() + 20);
+		},
+		() => "normal"
 	];
 }
 
