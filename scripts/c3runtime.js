@@ -624,6 +624,18 @@ self["C3_Shaders"] = {};
 
 "use strict";C3.Behaviors.scrollto.Exps={};
 
+"use strict";C3.Behaviors.wrap=class extends C3.SDKBehaviorBase{constructor(a){super(a)}Release(){super.Release()}};
+
+"use strict";C3.Behaviors.wrap.Type=class extends C3.SDKBehaviorTypeBase{constructor(a){super(a)}Release(){super.Release()}OnCreate(){}};
+
+"use strict";{const a=new C3.Rect;C3.Behaviors.wrap.Instance=class extends C3.SDKBehaviorInstanceBase{constructor(a,b){super(a),this._mode=0,b&&(this._mode=b[0]),this._StartTicking()}Release(){super.Release()}SaveToJson(){return{"m":this._mode}}LoadFromJson(a){this._mode=a["m"]}Tick(){const b=this._inst.GetWorldInfo(),c=b.GetLayer(),d=c.GetLayout(),e=b.GetBoundingBox();0===this._mode?a.set(0,0,d.GetWidth(),d.GetHeight()):a.copy(c.GetViewport()),e.getRight()<a.getLeft()?(b.SetX(a.getRight()-1+(b.GetX()-e.getLeft())),b.SetBboxChanged()):e.getLeft()>a.getRight()?(b.SetX(a.getLeft()+1-(e.getRight()-b.GetX())),b.SetBboxChanged()):e.getBottom()<a.getTop()?(b.SetY(a.getBottom()-1+(b.GetY()-e.getTop())),b.SetBboxChanged()):e.getTop()>a.getBottom()&&(b.SetY(a.getTop()+1-(e.getBottom()-b.GetY())),b.SetBboxChanged())}GetPropertyValueByIndex(a){return a===0?this._mode:void 0}SetPropertyValueByIndex(a,b){a===0?this._mode=b:void 0}}}
+
+"use strict";C3.Behaviors.wrap.Cnds={};
+
+"use strict";C3.Behaviors.wrap.Acts={};
+
+"use strict";C3.Behaviors.wrap.Exps={};
+
 "use strict";C3.Behaviors.Bullet=class extends C3.SDKBehaviorBase{constructor(a){super(a)}Release(){super.Release()}};
 
 "use strict";C3.Behaviors.Bullet.Type=class extends C3.SDKBehaviorTypeBase{constructor(a){super(a)}Release(){super.Release()}OnCreate(){}};
@@ -714,6 +726,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite,
 		C3.Behaviors.EightDir,
 		C3.Behaviors.scrollto,
+		C3.Behaviors.wrap,
 		C3.Behaviors.Bullet,
 		C3.Plugins.Mouse,
 		C3.Plugins.Keyboard,
@@ -732,10 +745,11 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite.Acts.SetVisible,
 		C3.Plugins.Audio.Acts.Play,
 		C3.Plugins.Spritefont2.Acts.TypewriterText,
+		C3.Plugins.Sprite.Acts.Spawn,
 		C3.Behaviors.EightDir.Cnds.IsMoving,
 		C3.Plugins.Sprite.Acts.SetAnim,
 		C3.Plugins.Mouse.Cnds.OnClick,
-		C3.Plugins.Sprite.Acts.Spawn,
+		C3.Plugins.Sprite.Cnds.CompareInstanceVar,
 		C3.Plugins.Sprite.Acts.SetTowardPosition,
 		C3.Plugins.Mouse.Exps.X,
 		C3.Plugins.Mouse.Exps.Y,
@@ -752,12 +766,18 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite.Cnds.OnCollision,
 		C3.Plugins.Sprite.Acts.Destroy,
 		C3.Plugins.System.Cnds.Every,
+		C3.Plugins.System.Acts.AddVar,
 		C3.Plugins.System.Cnds.EveryTick,
 		C3.Behaviors.MoveTo.Acts.MoveToObject,
 		C3.Plugins.System.Acts.RestartLayout,
 		C3.Plugins.Spritefont2.Acts.SetPos,
 		C3.Plugins.Sprite.Acts.SetPos,
-		C3.Plugins.Sprite.Cnds.OnAnimFinished
+		C3.Plugins.Sprite.Cnds.OnAnimFinished,
+		C3.Plugins.Sprite.Acts.AddInstanceVar,
+		C3.Plugins.System.Acts.SubVar,
+		C3.Plugins.System.Cnds.CompareVar,
+		C3.Plugins.System.Acts.SetVar,
+		C3.Plugins.Audio.Acts.StopAll
 	];
 };
 self.C3_JsPropNameTable = [
@@ -767,6 +787,7 @@ self.C3_JsPropNameTable = [
 	{Ammo: 0},
 	{"8Direções": 0},
 	{CentrarEm: 0},
+	{DarAVolta: 0},
 	{Jogador: 0},
 	{Projétil: 0},
 	{Bala: 0},
@@ -791,8 +812,12 @@ self.C3_JsPropNameTable = [
 	{Fixar: 0},
 	{FonteDeSprites2: 0},
 	{HUD: 0},
-	{Sangue2: 0},
-	{Sprite7: 0}
+	{ArminhaVagabunda: 0},
+	{FonteDeSprites3: 0},
+	{Wave: 0},
+	{AmmoSpawn: 0},
+	{Sprite7: 0},
+	{SpawnTime: 0}
 ];
 
 "use strict";
@@ -917,6 +942,15 @@ self.C3_JsPropNameTable = [
 		},
 		() => "nao",
 		p => {
+			const v0 = p._GetNode(0).GetVar();
+			return () => v0.GetValue();
+		},
+		() => 20,
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			return () => and("Wave: ", v0.GetValue());
+		},
+		p => {
 			const n0 = p._GetNode(0);
 			return () => (n0.ExpObject() + 10);
 		},
@@ -926,9 +960,22 @@ self.C3_JsPropNameTable = [
 		},
 		p => {
 			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() + 100);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() - 150);
+		},
+		p => {
+			const n0 = p._GetNode(0);
 			return () => (n0.ExpObject() + 20);
 		},
-		() => "normal"
+		() => "normal",
+		() => 25,
+		() => 4,
+		() => 6,
+		() => 5,
+		() => 3
 	];
 }
 
