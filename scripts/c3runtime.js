@@ -730,6 +730,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Behaviors.Pin,
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.Sprite.Acts.SetVisible,
+		C3.Plugins.Audio.Acts.Play,
 		C3.Plugins.Spritefont2.Acts.TypewriterText,
 		C3.Behaviors.EightDir.Cnds.IsMoving,
 		C3.Plugins.Sprite.Acts.SetAnim,
@@ -738,7 +739,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite.Acts.SetTowardPosition,
 		C3.Plugins.Mouse.Exps.X,
 		C3.Plugins.Mouse.Exps.Y,
-		C3.Plugins.Audio.Acts.Play,
 		C3.Plugins.Sprite.Acts.SubInstanceVar,
 		C3.Plugins.Spritefont2.Acts.SetText,
 		C3.Plugins.Keyboard.Cnds.IsKeyDown,
@@ -891,6 +891,8 @@ self.C3_JsPropNameTable = [
 	}
 
 	self.C3_ExpressionFuncs = [
+		() => 0,
+		() => "",
 		p => {
 			const n0 = p._GetNode(0);
 			return () => ("Ammo: " + (n0.ExpInstVar()).toString());
@@ -898,14 +900,12 @@ self.C3_JsPropNameTable = [
 		() => 2,
 		() => "andando",
 		() => "parado",
-		() => 0,
 		() => 1,
 		() => "fogo",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0();
 		},
-		() => "",
 		p => {
 			const n0 = p._GetNode(0);
 			return () => and("Ammo:", n0.ExpInstVar());
